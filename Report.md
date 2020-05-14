@@ -21,16 +21,16 @@ The goals / steps of this project are the following:
 ### Reflection
 
 ### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
-My Pipeline consisted of five (5) steps. First, I converted the images to grayscale images. This will make it easier for detecting edges in the images later on. Next, I applied a Gaussian blur with a kernel size of 5. This is done to reduce image noise and smoothen edges. After that, I pass the image through a canny edge detection function with a low to high threshold ratio of 1:3. Next, I masked out a region of interest from the image. This is the region I most likely expect to find the lane lines. And finally, I detect Hough lines from the resulting image and marked out the lane lines.
+My Pipeline consisted of five (5) steps. First, I converted the images to grayscale images. This will make it easier for detecting edges in the images later on. Next, I applied a Gaussian blur with a kernel size of 5. This is done to reduce image noise and smoothen edges. After that, I pass the image through a canny edge detection function with a low to high threshold ratio of 1:3. Next, I masked out a region of interest from the image. This is the region I most likely expect to find the lane lines. And finally, I detect Hough lines from the resulting image and mark the lane lines.
 
 In other to draw a single line on the left and the right lanes, I modified the draw_lines() function as follows:
-First, I separated the lines (points that define the lines) into their respective regions either they make up the left lane or right. I did this by checking the value of the slope of the lines. Generally, lines with a positive slope make up the right lane and line with negative slope make up the left lane.
+First, I separated the lines (points that define the lines) into their respective regions, either they make up the left lane or right. I did this by checking the value of the slope of the lines. Generally, lines with a positive slope make up the right lane and lines with negative slope make up the left lane.
 
 Next, I extracted the X-point values and Y-point values of each lane to calculate the coefficients of the lines they form.
 Using these coefficients (slope and bais), I can generate any point that lies on each lane. 
-At the final step, I generate 10 points that will lie on the line within a range form the near view to the far view into the image. The result are solid lines making the lane line detected.
+At the final step, I generate 10 points that will lie on the line within a range form the near view to the far view into the image. The result are solid lines making the lane lines detected.
 
-To better identify lines that make up a lane in the images, I decided to add a cutoff_slope parameter to the draw_lines() function. The idea is that lines with a smaller slope below the cutoff ranges are most likely horizontal lines (false positive) which do not add much value to helping us detect lane lines. The inclusion of this parameter greatly helps in detecting lines in the challenge video with the front of the car visible in my region of interest. Basically, those lines are ignored.
+To better identify lines that make up a lane in the images, I added a cutoff_slope argument to the draw_lines() function. The idea is that lines with a smaller slope below the cutoff ranges are most likely horizontal lines (false positive) which do not add much value to helping us detect lane lines. The inclusion of this parameter greatly helps in detecting lanes in the challenge video with the front of the car visible in my region of interest. Basically, those lines are ignored.
 
 
 <div>
@@ -52,30 +52,29 @@ To better identify lines that make up a lane in the images, I decided to add a c
 </div>
 
 <div style ="max-width:30%; display: inline-block;">
-<img src="./test_images_output/img_withlines.jpg" alt="image with lines" style="width:500px;"/>Step 5. Image with lines
+<img src="./test_images_output/img_withlines.jpg" alt="Image with lines" style="width:500px;"/>Step 5. Image with lines
 </div>
 
 <div style ="max-width:30%; display: inline-block;">
-<img src="./test_images_output/img_markedlanes.jpg" alt="Image with mark lanes" style="width:500px;"/>Result: Image with marked lanes
+<img src="./test_images_output/img_markedlanes.jpg" alt="Image with marked lanes" style="width:500px;"/>Final Image with marked lanes
 </div>
 <div>
 
-<video width="960" height="540" controls>
+<!-- <video width="960" height="540" controls>
   <source src="./test_videos_output/solidWhiteRight.mp4" type="video/mp4">
-</video>
+</video> -->
 
 
 
 ### 2. Identify potential shortcomings with your current pipeline
 
 The pipeline does not correctly detect curved lanes.
-The pipeline sometimes is thrown off by horizontal lines in the images.
+The pipeline sometimes is thrown off by horizontal edges in the images.
 
 
 ### 3. Suggest possible improvements to your pipeline
 
 
-To be able to detect curved lanes. This can possibly be done by fitting the lines using a higher
-degree polynomial.
+To be able to detect curved lanes. This can possibly be done by fitting the lines using a higher degree polynomial.
 
-It may be advantageous to keep in memory the lines previously detected and with small incremental changes update current detected lines. Also, an advantage with this is when there is a disturbance in the system and the pipeline completely fails to detect lanes, previous information can be used to mark out approximate lanes.
+It may be advantageous to keep in some memory the lines previously detected and with small incremental changes update current detected lines. Also, an advantage with this is when there is a disturbance in the system and the pipeline completely fails to detect lanes, previous information can be used to mark out approximate lanes.
